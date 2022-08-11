@@ -1,0 +1,31 @@
+version: '3.8'
+services:
+  dynamodb-local:
+    image: "amazon/dynamodb-local:latest"
+    container_name: dynamodb-local
+    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
+    restart: always
+    ports:
+      - "8000:8000"
+    volumes:
+      - ".data/dynamodb:/home/dynamodblocal/data"
+    working_dir: /home/dynamodblocal
+  postgres:
+    image: "postgres"
+    container_name: postgres
+    restart: "always"
+    environment:
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      PGDATA: "/var/lib/postgresql/data/pgdata"
+    ports:
+      - "5432:5432"
+    volumes:
+      - ".data/postgres:/var/lib/postgresql/data"
+  redis:
+    image: "redis"
+    container_name: redis
+    restart: "always"
+    ports:
+      - "6379:6379"
+    volumes:
+      - ".data/redis:/data"
