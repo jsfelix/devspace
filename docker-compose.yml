@@ -11,7 +11,7 @@ services:
       - ".data/dynamodb:/home/dynamodblocal/data"
     working_dir: /home/dynamodblocal
   postgres:
-    image: "postgres"
+    image: "postgres:14"
     container_name: postgres
     restart: "always"
     environment:
@@ -52,3 +52,16 @@ services:
       - "6379:6379"
     volumes:
       - ".data/redis:/data"
+  minio:
+    image: "minio/minio"
+    container_name: minio
+    restart: "always"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - ".data/minio:/data"
+    environment:
+      MINIO_ROOT_USER: "${MINIO_ROOT_USER}"
+      MINIO_ROOT_PASSWORD: "${MINIO_ROOT_PASSWORD}"
+    command: server --console-address ":9001" /data
